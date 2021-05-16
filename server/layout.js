@@ -8,7 +8,7 @@ module.exports = function(state, body = '') {
     <html lang="${state.locale}">
       <head>
         <title>${state.title}</title>
-        <base href="/" />
+        <base href="${state.baseUrl}/" />
         <meta name="robots" content="${state.robots},noarchive" />
         <meta name="google" content="nositelinkssearchbox" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -33,33 +33,33 @@ module.exports = function(state, body = '') {
         <meta name="theme-color" content="#220033" />
         <meta name="msapplication-TileColor" content="#220033" />
 
-        <link rel="manifest" href="/app.webmanifest" />
-        <link rel="stylesheet" type="text/css" href="/inter.css" />
+        <link rel="manifest" href="${state.baseUrl}/app.webmanifest" />
+        <link rel="stylesheet" type="text/css" href="${state.baseUrl}/inter.css" />
         <link
           rel="stylesheet"
           type="text/css"
-          href="${assets.get('app.css')}"
+          href="${state.baseUrl}/${assets.get('app.css')}"
         />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="${assets.get('apple-touch-icon.png')}"
+          href="${state.baseUrl}/${assets.get('apple-touch-icon.png')}"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="${assets.get('favicon-32x32.png')}"
+          href="${state.baseUrl}/${assets.get('favicon-32x32.png')}"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="${assets.get('favicon-16x16.png')}"
+          href="${state.baseUrl}/${assets.get('favicon-16x16.png')}"
         />
         <link
           rel="mask-icon"
-          href="${assets.get('safari-pinned-tab.svg')}"
+          href="${state.baseUrl}/${assets.get('safari-pinned-tab.svg')}"
           color="#838383"
         />
         <script defer src="${assets.get('app.js')}"></script>
@@ -70,7 +70,7 @@ module.exports = function(state, body = '') {
           <p>
             <a
               class="link"
-              href="https://github.com/mozilla/send/blob/master/docs/faq.md#why-does-firefox-send-require-javascript"
+              href="${state.baseUrl}/https://github.com/mozilla/send/blob/master/docs/faq.md#why-does-firefox-send-require-javascript"
             >
               ${state.translate('whyJavascript')}
             </a>
