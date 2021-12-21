@@ -3,6 +3,26 @@ const { tmpdir } = require('os');
 const path = require('path');
 const { randomBytes } = require('crypto');
 
+convict.addFormat({
+  name: 'positive-int-array',
+  coerce: ints => {
+    // can take: int[] | string[] | string (csv), returns -> int[]
+    const ints_arr = Array.isArray(ints) ? ints : ints.trim().split(',');
+    return ints_arr.map(int =>
+      typeof int === 'number'
+        ? int
+        : parseInt(int.replace(/['"]+/g, '').trim(), 10)
+    );
+  },
+  validate: ints => {
+    // takes: int[], errors if any NaNs, negatives, or floats present
+    for (const int of ints) {
+      if (typeof int !== 'number' || isNaN(int) || int < 0 || int % 1 > 0)
+        throw new Error('must be a comma-separated list of positive integers');
+    }
+  }
+});
+
 const conf = convict({
   s3_bucket: {
     format: String,
@@ -25,7 +45,7 @@ const conf = convict({
     env: 'GCS_BUCKET'
   },
   expire_times_seconds: {
-    format: Array,
+    format: 'positive-int-array',
     default: [300, 3600, 86400, 604800],
     env: 'EXPIRE_TIMES_SECONDS'
   },
@@ -40,9 +60,14 @@ const conf = convict({
     env: 'MAX_EXPIRE_SECONDS'
   },
   download_counts: {
-    format: Array,
+    format: 'positive-int-array',
     default: [1, 2, 3, 4, 5, 20, 50, 100],
     env: 'DOWNLOAD_COUNTS'
+  },
+  default_downloads: {
+    format: Number,
+    default: 1,
+    env: 'DEFAULT_DOWNLOADS'
   },
   max_downloads: {
     format: Number,
@@ -69,10 +94,20 @@ const conf = convict({
     default: 6379,
     env: 'REDIS_PORT'
   },
+  redis_user: {
+    format: String,
+    default: '',
+    env: 'REDIS_USER'
+  },
   redis_password: {
     format: String,
     default: '',
     env: 'REDIS_PASSWORD'
+  },
+  redis_db: {
+    format: String,
+    default: '',
+    env: 'REDIS_DB'
   },
   redis_event_expire: {
     format: Boolean,
